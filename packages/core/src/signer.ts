@@ -310,14 +310,14 @@ async function estimateFee(
   return calculateFee(Math.round(gasEstimation * multiplier), gasPrice);
 }
 
-export interface HDPathOptions {
+interface HDPathOptions {
   path: string;
   prefix: string;
 }
 
-export type DerivationPaths = { [chainId: string]: HDPathOptions };
+type DerivationPaths = { [chainId: string]: HDPathOptions };
 
-export function getCosmosDerivationPathsFromRegistry(): DerivationPaths {
+function getCosmosDerivationPathsFromRegistry(): DerivationPaths {
   return chains
     .filter(
       (chain) =>
