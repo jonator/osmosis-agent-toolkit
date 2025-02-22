@@ -7,12 +7,12 @@ Large Language Models (LLMs) can use these tools to interact with the Osmosis pr
 
 ## Available tools
 
-| Tool          | Description       |
-| ------------- | ----------------- |
-| `bank.read`   | Read bank balance |
-| `bank.send`   | Send assets       |
-| `assets.read` | Search for assets |
-| `assets.swap` | Swap assets       |
+| Tool            | Description        |
+| --------------- | ------------------ |
+| `bank.query`    | Query bank balance |
+| `bank.tx.send`  | Send assets        |
+| `assets.query`  | Search for assets  |
+| `pools.tx.swap` | Swap assets        |
 
 ## Packages
 

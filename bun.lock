@@ -28,6 +28,7 @@
         "@scure/bip39": "^1.3.0",
         "chain-registry": "^1.69.106",
         "fuse.js": "^7.1.0",
+        "ky": "^1.7.5",
         "osmojs": "^16.14.0",
       },
       "devDependencies": {
@@ -251,6 +252,8 @@
     "js-yaml": ["js-yaml@4.1.0", "", { "dependencies": { "argparse": "^2.0.1" }, "bin": { "js-yaml": "bin/js-yaml.js" } }, "sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA=="],
 
     "knip": ["knip@5.44.4", "", { "dependencies": { "@nodelib/fs.walk": "3.0.1", "@snyk/github-codeowners": "1.1.0", "easy-table": "1.2.0", "enhanced-resolve": "^5.18.0", "fast-glob": "^3.3.3", "jiti": "^2.4.2", "js-yaml": "^4.1.0", "minimist": "^1.2.8", "picocolors": "^1.1.0", "picomatch": "^4.0.1", "pretty-ms": "^9.0.0", "smol-toml": "^1.3.1", "strip-json-comments": "5.0.1", "summary": "2.1.0", "zod": "^3.22.4", "zod-validation-error": "^3.0.3" }, "peerDependencies": { "@types/node": ">=18", "typescript": ">=5.0.4" }, "bin": { "knip": "bin/knip.js", "knip-bun": "bin/knip-bun.js" } }, "sha512-Ryn8LwWHLId8jSK1DgtT0hmg5DbzkqAtH+Gg3vZJpmSMgGHMspej9Ag+qKTm8wsPLDjVetuEz/lIsobo0XCMvQ=="],
+
+    "ky": ["ky@1.7.5", "", {}, "sha512-HzhziW6sc5m0pwi5M196+7cEBtbt0lCYi67wNsiwMUmz833wloE0gbzJPWKs1gliFKQb34huItDQX97LyOdPdA=="],
 
     "libsodium-sumo": ["libsodium-sumo@0.7.15", "", {}, "sha512-5tPmqPmq8T8Nikpm1Nqj0hBHvsLFCXvdhBFV7SGOitQPZAA6jso8XoL0r4L7vmfKXr486fiQInvErHtEvizFMw=="],
 
