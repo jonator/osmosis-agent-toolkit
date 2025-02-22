@@ -1,5 +1,5 @@
-import type { DerivationPaths, HDPathOptions } from "./derivation-paths";
 import type { AssetList, Chain } from "@chain-registry/types";
+import { chains } from "chain-registry/mainnet";
 import {
   type SigningCosmWasmClient,
   wasmTypes,
@@ -24,7 +24,6 @@ import { sha256 } from "@noble/hashes/sha256";
 import { bech32, utf8 } from "@scure/base";
 import { HDKey } from "@scure/bip32";
 import { mnemonicToSeedSync } from "@scure/bip39";
-import { getCosmosDerivationPathsFromRegistry } from "./derivation-paths";
 import { CometClient } from "@cosmjs/tendermint-rpc";
 import { FeeToken } from "@chain-registry/types/chain.schema";
 import { DirectSecp256k1HdWallet, Registry } from "@cosmjs/proto-signing";
@@ -309,4 +308,26 @@ async function estimateFee(
 ) {
   const gasEstimation = await client.simulate(sender, messages, memo);
   return calculateFee(Math.round(gasEstimation * multiplier), gasPrice);
+}
+
+export interface HDPathOptions {
+  path: string;
+  prefix: string;
+}
+
+export type DerivationPaths = { [chainId: string]: HDPathOptions };
+
+export function getCosmosDerivationPathsFromRegistry(): DerivationPaths {
+  return chains
+    .filter(
+      (chain) =>
+        chain.chain_id !== undefined && chain.bech32_prefix !== undefined
+    )
+    .reduce((acc: DerivationPaths, chain) => {
+      acc[chain.chain_id] = {
+        path: `m/44'/${chain.slip44}'/0'/0/0`,
+        prefix: chain.bech32_prefix!,
+      };
+      return acc;
+    }, {});
 }
