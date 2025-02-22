@@ -3,5 +3,21 @@
   "version": "1.0.0",
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "packageManager": "bun@1.2.0",
+  "author": "Jon Ator <jonathanator0@gmail.com> (https://github.com/jonator)",
+  "license": "MIT",
+  "scripts": {
+    "build": "turbo run build",
+    "clean": "rm -rf node_modules; turbo run clean --parallel",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "bun-types": "^1.1.25",
+    "knip": "^5.27.0",
+    "turbo": "^2.4.2",
+    "typescript": "5.7.3"
+  }
 }
