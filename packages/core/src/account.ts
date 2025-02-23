@@ -1,5 +1,5 @@
 import type { Chain } from '@chain-registry/types'
-import type { FeeToken } from '@chain-registry/types/chain.schema'
+import type { FeeToken } from '@chain-registry/types/chain.schema.js'
 import type { StdFee } from '@cosmjs/amino'
 import {
   type SigningCosmWasmClient,

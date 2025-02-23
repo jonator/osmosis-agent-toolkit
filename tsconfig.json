@@ -3,16 +3,18 @@
   "compilerOptions": {
     "target": "es2022",
     "moduleDetection": "force",
-    "module": "es2022",
-    "moduleResolution": "bundler",
+    "module": "NodeNext",
+    "esModuleInterop": true,
     "skipLibCheck": true,
     "strict": true,
     "declaration": true,
+    "declarationMap": true,
     "sourceMap": true,
+    "composite": true,
     "noUncheckedIndexedAccess": true,
     "noFallthroughCasesInSwitch": true,
-    "types": ["bun-types"],
+    "types": ["bun-types", "node"],
     "forceConsistentCasingInFileNames": true
   },
-  "exclude": ["node_modules"]
+  "exclude": ["dist", "node_modules", "**/*.spec.*", "**/*.test.*"]
 }

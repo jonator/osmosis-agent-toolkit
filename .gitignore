@@ -3,5 +3,8 @@
 dist
 node_modules
 .turbo
+.tsup
 
 tsconfig.tsbuildinfo
+
+.env.*

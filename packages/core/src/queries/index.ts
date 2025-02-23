@@ -1,2 +1,2 @@
-export * from './cosmos'
-export * from './sqs'
+export * from './cosmos/index.js'
+export * from './sqs/index.js'

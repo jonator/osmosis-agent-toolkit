@@ -1,10 +1,10 @@
 import ky from 'ky'
 
-import { type PriceMap, getPrice } from './prices'
+import { type PriceMap, getPrice } from './prices.js'
 import type {
   SidecarInGivenOutQuoteResponse,
   SidecarOutGivenInQuoteResponse,
-} from './router'
+} from './router.js'
 
 export class OsmosisSqsQueryClient {
   constructor(private readonly sqsUrl = 'https://sqsprod.osmosis.zone') {}

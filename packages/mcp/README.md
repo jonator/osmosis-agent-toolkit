@@ -1,0 +1,55 @@
+# Osmosis Model Context Protocol
+
+Provides an Osmosis implementation of the [Model Context Protocol](https://modelcontextprotocol.io/) server given an account mnemonic.
+This enables MCP clients to interact with a given Osmosis account.
+
+## Setup
+
+To run the Osmosis MCP server using npx, use the following command:
+
+```bash
+npx -y @osmosis-agent-toolkit/mcp --mnemonic=MNEMONIC
+```
+
+## Usage with Claude Desktop
+
+Add the following to your `claude_desktop_config.json`. See [here](https://modelcontextprotocol.io/quickstart/user) for more details.
+
+```json
+{
+    “mcpServers”: {
+        “stripe”: {
+            “command”: “npx”,
+            “args”: [
+                “-y”,
+                “@osmosis-agent-toolkit/mcp”,
+                “--mnemonic=MNEMONIC”
+            ]
+        }
+    }
+}
+```
+
+## Debugging the Server
+
+To debug your server, you can use the [MCP Inspector](https://modelcontextprotocol.io/docs/tools/inspector).
+
+First build the server
+
+```
+bun run build
+```
+
+Run the following command in your terminal:
+
+```bash
+# Start MCP Inspector and server with all tools
+npx @modelcontextprotocol/inspector bun dist/index.js --mnemonic=MNEMONIC
+```
+
+### Instructions
+
+1. Replace `MNEMONIC` with your actual Osmosis mnemonic.
+2. Run the command to start the MCP Inspector.
+3. Open the MCP Inspector UI in your browser and click Connect to start the MCP server.
+4. You can see the list of tools you selected and test each tool individually.
