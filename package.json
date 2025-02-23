@@ -1,9 +1,7 @@
 {
   "name": "osmosis-agent-toolkit",
   "version": "1.0.0",
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": ["packages/*"],
   "packageManager": "bun@1.2.0",
   "author": "Jon Ator <jonathanator0@gmail.com> (https://github.com/jonator)",
   "license": "MIT",
@@ -11,7 +9,9 @@
     "build": "turbo run build",
     "clean": "turbo clean --parallel; rm -rf node_modules",
     "lint": "turbo run lint",
-    "lint:fix": "turbo run lint:fix"
+    "lint:fix": "turbo run lint:fix",
+    "knip": "knip",
+    "knip:fix": "knip --fix"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",

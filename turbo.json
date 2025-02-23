@@ -2,7 +2,13 @@
   "$schema": "https://turbo.build/schema.json",
   "tasks": {
     "build": {
-      "outputs": ["dist/**"]
-    }
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", "tsconfig.tsbuildinfo"]
+    },
+    "clean": {
+      "cache": false
+    },
+    "lint": {},
+    "lint:fix": {}
   }
 }
