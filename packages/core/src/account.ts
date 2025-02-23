@@ -1,4 +1,4 @@
-import type { AssetList, Chain } from '@chain-registry/types'
+import type { Chain } from '@chain-registry/types'
 import type { FeeToken } from '@chain-registry/types/chain.schema'
 import type { StdFee } from '@cosmjs/amino'
 import {
@@ -35,18 +35,9 @@ import { osmosisAminoConverters, osmosisProtoRegistry } from 'osmojs'
 
 export interface CosmosSignData {
   msgs: EncodeObject[]
-  chain: Chain
-  assetsList?: AssetList
-  sender: string
   memo?: string
   feeMultiplier?: number
   fee?: StdFee
-}
-
-export interface CosmosSignMessageOptions {
-  message: string
-  /** Default: `cosmos` */
-  chainId?: string
 }
 
 type CosmosFee = {
@@ -54,43 +45,60 @@ type CosmosFee = {
   gasPrice: GasPrice | undefined
 }
 
-export interface ICosmosSigner {
-  signAndBroadcast: (options: CosmosSignData) => Promise<string>
-  signMessage: (options: CosmosSignMessageOptions) => Promise<string>
-  estimateFees: (options: CosmosSignData) => Promise<CosmosFee>
-  /** If chain ID provided, returns address as represented on that chain. Otherwise, returns address as represented on the defaulted cosmos chain. */
-  deriveAddress: (chainId?: string) => string | undefined
-}
+export class Account {
+  protected chain: Chain
+  protected derivationPath: {
+    path: string
+    prefix: string
+  }
 
-export class CosmosSigner implements ICosmosSigner {
-  constructor(protected readonly mnemonic: string) {}
+  constructor(
+    protected readonly mnemonic: string,
+    protected readonly chainId = 'osmosis-1',
+  ) {
+    this.chain = chains.find((chain) => chain.chain_id === this.chainId)!
+    this.derivationPath = {
+      path: `m/44'/${this.chain.slip44}'/0'/0/0`,
+      prefix: this.chain.bech32_prefix!,
+    }
+  }
+
+  get address() {
+    const seed = mnemonicToSeedSync(this.mnemonic)
+    const hdkey = HDKey.fromMasterSeed(seed)
+    const child = hdkey.derive(this.derivationPath.path)
+
+    if (!child.publicKey) {
+      throw new Error('Failed to derive public key')
+    }
+
+    const hash = ripemd160(sha256(child.publicKey))
+
+    return bech32.encode(this.derivationPath.prefix, bech32.toWords(hash))
+  }
 
   async estimateFees({
     msgs,
-    chain,
-    sender,
     memo,
     feeMultiplier = 2,
   }: CosmosSignData): Promise<CosmosFee> {
-    const wallet = await this.getWallet(chain.chain_id)
+    const wallet = await this.getWallet()
 
-    const endpoint = chain.apis?.rpc?.[0]
+    const endpoint = this.chain.apis?.rpc?.[0]
     if (!endpoint) {
       throw new Error('[Cosmos Signer]: No RPC endpoint found')
     }
 
-    const [stargateClient, gasPrice] = await Promise.all([
-      getConsensusSigningStargateClient({
-        chain,
-        endpoint: endpoint.address,
-        signer: wallet,
-      }),
-      getGasPrice(chain),
-    ])
+    const stargateClient = await getConsensusSigningStargateClient({
+      chain: this.chain,
+      endpoint: endpoint.address,
+      signer: wallet,
+    })
+    const gasPrice = getGasPrice(this.chain)
 
     const fee = await estimateFee(
       stargateClient,
-      sender,
+      this.address,
       msgs,
       gasPrice!,
       memo,
@@ -103,36 +111,37 @@ export class CosmosSigner implements ICosmosSigner {
     }
   }
 
-  async signAndBroadcast({ msgs, fee, chain, sender, memo }: CosmosSignData) {
-    const wallet = await this.getWallet(chain.chain_id)
-
-    const endpoint = chain.apis?.rpc?.[0]
-
+  async signAndBroadcast({ msgs, fee, memo }: CosmosSignData) {
+    const wallet = await this.getWallet()
+    const endpoint = this.chain.apis?.rpc?.[0]
     if (!endpoint) {
       throw new Error('[Cosmos Signer]: No RPC endpoint found')
     }
 
-    const [stargateClient, gasPrice] = await Promise.all([
-      getConsensusSigningStargateClient({
-        chain,
-        endpoint: endpoint.address,
-        signer: wallet,
-      }),
-      getGasPrice(chain),
-    ])
+    const stargateClient = await getConsensusSigningStargateClient({
+      chain: this.chain,
+      endpoint: endpoint.address,
+      signer: wallet,
+    })
+    const gasPrice = getGasPrice(this.chain)
 
-    const transactionHash = await stargateClient.signAndBroadcastSync(
-      sender,
+    return await stargateClient.signAndBroadcastSync(
+      this.address,
       msgs,
-      fee ?? (await estimateFee(stargateClient, sender, msgs, gasPrice!, memo)),
+      fee ??
+        (await estimateFee(
+          stargateClient,
+          this.address,
+          msgs,
+          gasPrice!,
+          memo,
+        )),
       memo,
     )
-
-    return transactionHash
   }
 
-  async signMessage({ message, chainId }: CosmosSignMessageOptions) {
-    const wallet = await this.getWallet(chainId)
+  async signMessage(message: string) {
+    const wallet = await this.getWallet()
     const messageHash = utf8.decode(message)
 
     const signDoc = {
@@ -143,38 +152,13 @@ export class CosmosSigner implements ICosmosSigner {
       bodyBytes: messageHash,
     }
 
-    const { signature } = await wallet.signDirect(this.deriveAddress(), signDoc)
-
-    return signature.signature
+    return (await wallet.signDirect(this.address, signDoc)).signature.signature
   }
 
-  deriveAddress(chainId?: string): string {
-    const seed = mnemonicToSeedSync(this.mnemonic)
-    const hdkey = HDKey.fromMasterSeed(seed)
-    const derivationPath = this.getDerivationPath(chainId)
-    const child = hdkey.derive(derivationPath.path)
-
-    if (!child.publicKey) {
-      throw new Error('Failed to derive public key')
-    }
-
-    const hash = ripemd160(sha256(child.publicKey))
-
-    return bech32.encode(
-      derivationPath.prefix ?? 'cosmos',
-      bech32.toWords(hash),
-    )
-  }
-
-  /** Returns configured static default of chain ID not provided or found. */
-  protected getDerivationPath(chainId?: string): HDPathOptions {
-    return getCosmosDerivationPathsFromRegistry()[chainId ?? 'cosmoshub-4']!
-  }
-
-  protected getWallet(chainId?: string) {
+  protected getWallet() {
     return DirectSecp256k1HdWallet.fromMnemonic(this.mnemonic, {
-      hdPaths: [stringToPath(this.getDerivationPath(chainId).path)],
-      prefix: this.getDerivationPath(chainId).prefix,
+      hdPaths: [stringToPath(this.derivationPath.path)],
+      prefix: this.derivationPath.prefix,
     })
   }
 }
@@ -186,7 +170,7 @@ export class CosmosSigner implements ICosmosSigner {
  * @param feeDenom ex. uosmo
  * @returns
  */
-async function getGasPrice(chain: Chain, feeDenom?: string) {
+function getGasPrice(chain: Chain, feeDenom?: string) {
   let gasPrice: GasPrice | undefined = undefined
 
   if (chain.fees && chain.fees.fee_tokens.length > 0) {
@@ -225,12 +209,10 @@ async function getConsensusSigningStargateClient({
   signer: OfflineSigner
   options?: SigningStargateClientOptions
 }) {
-  const { registry, aminoTypes, SigningStargateClient } = getCosmosClient()
-
   const version = chain.codebase?.consensus?.version
   const type = chain.codebase?.consensus?.type
 
-  const cometClient = await getCometClient({ version, type, endpoint })
+  const cometClient = await getCometBftClient({ version, type, endpoint })
 
   return SigningStargateClient.createWithSigner(cometClient, signer, {
     registry,
@@ -239,28 +221,19 @@ async function getConsensusSigningStargateClient({
   })
 }
 
-function getCosmosClient() {
-  const registry = new Registry([
-    ...defaultRegistryTypes,
-    ...wasmTypes,
-    ...osmosisProtoRegistry,
-  ])
+const registry = new Registry([
+  ...defaultRegistryTypes,
+  ...wasmTypes,
+  ...osmosisProtoRegistry,
+])
 
-  const aminoTypes = new AminoTypes({
-    ...createDefaultAminoConverters(),
-    ...createWasmAminoConverters(),
-    ...osmosisAminoConverters,
-  })
+const aminoTypes = new AminoTypes({
+  ...createDefaultAminoConverters(),
+  ...createWasmAminoConverters(),
+  ...osmosisAminoConverters,
+})
 
-  return {
-    registry,
-    aminoTypes,
-    SigningStargateClient,
-    DirectSecp256k1HdWallet,
-  }
-}
-
-async function getCometClient({
+async function getCometBftClient({
   version,
   type,
   endpoint,
@@ -302,26 +275,4 @@ async function estimateFee(
 ) {
   const gasEstimation = await client.simulate(sender, messages, memo)
   return calculateFee(Math.round(gasEstimation * multiplier), gasPrice)
-}
-
-interface HDPathOptions {
-  path: string
-  prefix: string
-}
-
-type DerivationPaths = { [chainId: string]: HDPathOptions }
-
-function getCosmosDerivationPathsFromRegistry(): DerivationPaths {
-  return chains
-    .filter(
-      (chain) =>
-        chain.chain_id !== undefined && chain.bech32_prefix !== undefined,
-    )
-    .reduce((acc: DerivationPaths, chain) => {
-      acc[chain.chain_id] = {
-        path: `m/44'/${chain.slip44}'/0'/0/0`,
-        prefix: chain.bech32_prefix!,
-      }
-      return acc
-    }, {})
 }
