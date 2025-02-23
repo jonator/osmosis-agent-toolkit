@@ -34,31 +34,34 @@ export class BalancesTool implements Tool<z.ZodNever, Balance[]> {
     const priceMap = await this.sqsClient.getPrices(denoms)
 
     // Transform balances with prices and asset info
-    return balances.map(({ denom, amount }) => {
-      // Find asset info from chain registry
-      const assetInfo = osmosisAssets.find((asset) => asset.base === denom)
+    return balances
+      .map(({ denom, amount }) => {
+        // Find asset info from chain registry
+        const assetInfo = osmosisAssets.find((asset) => asset.base === denom)
 
-      if (!assetInfo) {
-        throw new Error(`Asset info not found for denom: ${denom}`)
-      }
+        if (!assetInfo) return
 
-      const decimals =
-        assetInfo.denom_units.find((unit) => unit.denom === assetInfo.display)
-          ?.exponent || 6
+        const decimals =
+          assetInfo.denom_units.find((unit) => unit.denom === assetInfo.display)
+            ?.exponent || 6
 
-      // Calculate amount with proper decimals
-      const amountWithDecimals = (parseInt(amount) / 10 ** decimals).toString()
+        // Calculate amount with proper decimals
+        const amountWithDecimals = (
+          parseInt(amount) /
+          10 ** decimals
+        ).toString()
 
-      // Get price and calculate value
-      const priceUsd = Number(priceMap[denom])
-      const valueUsd = Number(amountWithDecimals) * priceUsd
+        // Get price and calculate value
+        const priceUsd = Number(priceMap[denom])
+        const valueUsd = Number(amountWithDecimals) * priceUsd
 
-      return {
-        amount: amountWithDecimals,
-        ticker: assetInfo.symbol,
-        valueUsd,
-        priceUsd,
-      }
-    })
+        return {
+          amount: amountWithDecimals,
+          ticker: assetInfo.symbol,
+          valueUsd,
+          priceUsd,
+        }
+      })
+      .filter(Boolean) as Balance[]
   }
 }
