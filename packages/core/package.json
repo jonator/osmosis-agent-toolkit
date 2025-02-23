@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "tsc",
-    "clean": "rm -rf dist",
+    "clean": "rm -rf dist; rm tsconfig.tsbuildinfo",
     "lint": "biome check",
     "lint:fix": "biome check --write"
   },

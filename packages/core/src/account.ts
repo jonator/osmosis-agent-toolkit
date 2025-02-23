@@ -83,15 +83,8 @@ export class Account {
     feeMultiplier = 2,
   }: CosmosSignData): Promise<CosmosFee> {
     const wallet = await this.getWallet()
-
-    const endpoint = this.chain.apis?.rpc?.[0]
-    if (!endpoint) {
-      throw new Error('[Cosmos Signer]: No RPC endpoint found')
-    }
-
     const stargateClient = await getConsensusSigningStargateClient({
       chain: this.chain,
-      endpoint: endpoint.address,
       signer: wallet,
     })
     const gasPrice = getGasPrice(this.chain)
@@ -113,14 +106,8 @@ export class Account {
 
   async signAndBroadcast({ msgs, fee, memo }: CosmosSignData) {
     const wallet = await this.getWallet()
-    const endpoint = this.chain.apis?.rpc?.[0]
-    if (!endpoint) {
-      throw new Error('[Cosmos Signer]: No RPC endpoint found')
-    }
-
     const stargateClient = await getConsensusSigningStargateClient({
       chain: this.chain,
-      endpoint: endpoint.address,
       signer: wallet,
     })
     const gasPrice = getGasPrice(this.chain)
@@ -200,17 +187,20 @@ function getGasPrice(chain: Chain, feeDenom?: string) {
  */
 async function getConsensusSigningStargateClient({
   chain,
-  endpoint,
   signer,
   options,
 }: {
   chain: Chain
-  endpoint: string | HttpEndpoint
   signer: OfflineSigner
   options?: SigningStargateClientOptions
 }) {
   const version = chain.codebase?.consensus?.version
   const type = chain.codebase?.consensus?.type
+
+  const endpoint = chain.apis?.rpc?.[0]?.address
+  if (!endpoint) {
+    throw new Error('[Cosmos Signer]: No RPC endpoint found')
+  }
 
   const cometClient = await getCometBftClient({ version, type, endpoint })
 
