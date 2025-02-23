@@ -20,7 +20,7 @@ export function sendMsg(
 
 export function makeSplitRoutesSwapExactAmountOutMsg({
   routes,
-  tokenOut,
+  tokenOutDenom,
   tokenInMaxAmount,
   userOsmoAddress,
 }: {
@@ -29,10 +29,10 @@ export function makeSplitRoutesSwapExactAmountOutMsg({
       id: string
       tokenInDenom: string
     }[]
-    tokenOutAmount: string
+    tokenOutAmount: bigint
   }[]
-  tokenOut: { coinMinimalDenom: string }
-  tokenInMaxAmount: string
+  tokenOutDenom: string
+  tokenInMaxAmount: bigint
   userOsmoAddress: string
 }) {
   return osmosis.poolmanager.v1beta1.MessageComposer.withTypeUrl.splitRouteSwapExactAmountOut(
@@ -41,12 +41,12 @@ export function makeSplitRoutesSwapExactAmountOutMsg({
       routes: routes.map(({ pools, tokenOutAmount }) => ({
         pools: pools.map(({ id, tokenInDenom }) => ({
           poolId: BigInt(id),
-          tokenInDenom: tokenInDenom,
+          tokenInDenom,
         })),
-        tokenOutAmount: tokenOutAmount,
+        tokenOutAmount: tokenOutAmount.toString(),
       })),
-      tokenOutDenom: tokenOut.coinMinimalDenom,
-      tokenInMaxAmount,
+      tokenOutDenom,
+      tokenInMaxAmount: tokenInMaxAmount.toString(),
     },
   )
 }

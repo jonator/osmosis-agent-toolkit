@@ -24,7 +24,8 @@
     "chain-registry": "^1.69.106",
     "fuse.js": "^7.1.0",
     "ky": "^1.7.5",
-    "osmojs": "^16.14.0"
+    "osmojs": "^16.14.0",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@chain-registry/types": "^0.50.32"

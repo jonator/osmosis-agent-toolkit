@@ -21,9 +21,7 @@
         "@cosmjs/proto-signing": "0.33.0",
         "@cosmjs/stargate": "0.33.0",
         "@cosmjs/tendermint-rpc": "0.33.0",
-        "@noble/ed25519": "^2.1.0",
         "@noble/hashes": "^1.4.0",
-        "@noble/secp256k1": "^2.1.0",
         "@scure/base": "^1.1.7",
         "@scure/bip32": "^1.4.0",
         "@scure/bip39": "^1.3.0",
@@ -31,6 +29,7 @@
         "fuse.js": "^7.1.0",
         "ky": "^1.7.5",
         "osmojs": "^16.14.0",
+        "zod": "^3.24.2",
       },
       "devDependencies": {
         "@chain-registry/types": "^0.50.32",
@@ -88,11 +87,7 @@
 
     "@noble/curves": ["@noble/curves@1.8.1", "", { "dependencies": { "@noble/hashes": "1.7.1" } }, "sha512-warwspo+UYUPep0Q+vtdVB4Ugn8GGQj8iyB3gnRWsztmUHTI3S1nhdiWNsPUGL0vud7JlRRk1XEu7Lq1KGTnMQ=="],
 
-    "@noble/ed25519": ["@noble/ed25519@2.2.3", "", {}, "sha512-iHV8eI2mRcUmOx159QNrU8vTpQ/Xm70yJ2cTk3Trc86++02usfqFoNl6x0p3JN81ZDS/1gx6xiK0OwrgqCT43g=="],
-
     "@noble/hashes": ["@noble/hashes@1.7.1", "", {}, "sha512-B8XBPsn4vT/KJAGqDzbwztd+6Yte3P4V7iafm24bxgDe/mlRuK6xmWPuCNrKt2vDafZ8MfJLlchDG/vYafQEjQ=="],
-
-    "@noble/secp256k1": ["@noble/secp256k1@2.2.3", "", {}, "sha512-l7r5oEQym9Us7EAigzg30/PQAvynhMt2uoYtT3t26eGDVm9Yii5mZ5jWSWmZ/oSIR2Et0xfc6DXrG0bZ787V3w=="],
 
     "@nodelib/fs.scandir": ["@nodelib/fs.scandir@4.0.1", "", { "dependencies": { "@nodelib/fs.stat": "4.0.0", "run-parallel": "^1.2.0" } }, "sha512-vAkI715yhnmiPupY+dq+xenu5Tdf2TBQ66jLvBIcCddtz+5Q8LbMKaf9CIJJreez8fQ8fgaY+RaywQx8RJIWpw=="],
 

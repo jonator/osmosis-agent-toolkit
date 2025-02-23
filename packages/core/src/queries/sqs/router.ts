@@ -1,5 +1,3 @@
-import ky from 'ky'
-
 export type SidecarOutGivenInQuoteResponse = {
   amount_in: {
     denom: string
@@ -60,38 +58,9 @@ export type SidecarInGivenOutQuoteResponse = {
   }[]
 }
 
-export enum SidecarPoolType {
-  Weighted = 0,
-  Stable = 1,
-  Concentrated = 2,
-  CosmWasm = 3,
-}
-
-export class OsmosisSidecarClient {
-  constructor(private readonly sqsUrl = 'https://sqsprod.osmosis.zone') {}
-
-  async getOutGivenInQuote(
-    tokenIn: { amount: string; denom: string },
-    tokenOutDenom: string,
-  ) {
-    return ky
-      .get(`${this.sqsUrl}/router/quote`, {
-        searchParams: {
-          tokenIn: `${tokenIn.amount}${tokenIn.denom}`,
-          tokenOutDenom,
-        },
-      })
-      .json<SidecarOutGivenInQuoteResponse>()
-  }
-
-  async getInGivenOutQuote(tokenOut: { amount: string; denom: string }) {
-    return ky
-      .get(`${this.sqsUrl}/router/quote`, {
-        searchParams: {
-          token_out_denom: tokenOut.denom,
-          token_out_amount: tokenOut.amount,
-        },
-      })
-      .json<SidecarInGivenOutQuoteResponse>()
-  }
-}
+//  enum SidecarPoolType {
+//   Weighted = 0,
+//   Stable = 1,
+//   Concentrated = 2,
+//   CosmWasm = 3,
+// }
