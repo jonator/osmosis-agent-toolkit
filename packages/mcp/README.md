@@ -43,13 +43,16 @@ bun run build
 Run the following command in your terminal:
 
 ```bash
-# Start MCP Inspector and server with all tools
+# Start MCP Inspector and server
 npx @modelcontextprotocol/inspector bun dist/index.js --mnemonic=MNEMONIC
+# Start MCP Inspector and server with OSMOSIS_MNEMONIC environment variable
+npx @modelcontextprotocol/inspector bun dist/index.js 
+
 ```
 
 ### Instructions
 
-1. Replace `MNEMONIC` with your actual Osmosis mnemonic.
+1. Replace `MNEMONIC` with your actual Osmosis mnemonic. Or set the `OSMOSIS_MNEMONIC` environment variable.
 2. Run the command to start the MCP Inspector.
 3. Open the MCP Inspector UI in your browser and click Connect to start the MCP server.
 4. You can see the list of tools you selected and test each tool individually.

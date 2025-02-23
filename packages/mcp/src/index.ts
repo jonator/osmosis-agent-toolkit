@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
-import { green, red, yellow } from 'colors'
 import OsmosisAgentServer from './server.js'
 
 const ACCEPTED_ARGS = ['mnemonic']
@@ -37,9 +36,9 @@ function parseArgs(args: string[]) {
 }
 
 function handleError(error: unknown) {
-  console.error(red('\n🚨  Error initializing Osmosis MCP server:\n'))
+  console.error('\n🚨  Error initializing Osmosis MCP server:\n')
   console.error(
-    yellow(`   ${error instanceof Error ? error.message : String(error)}\n`),
+    `   ${error instanceof Error ? error.message : String(error)}\n`,
   )
   process.exit(1)
 }
@@ -52,8 +51,6 @@ async function main() {
     const transport = new StdioServerTransport()
 
     await server.connect(transport)
-    // Use console.error since console.log outputs to stdio
-    console.error(green('✅ Osmosis MCP Server running on stdio'))
   } catch (error) {
     handleError(error)
   }
