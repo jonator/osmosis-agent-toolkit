@@ -1,11 +1,10 @@
-import { cosmos, osmosis } from "osmojs";
-import { EncodeObject } from "@cosmjs/proto-signing";
+import { cosmos, osmosis } from 'osmojs'
 
 export function sendMsg(
   fromAddress: string,
   toAddress: string,
   denom: string,
-  amount: bigint
+  amount: bigint,
 ) {
   return cosmos.bank.v1beta1.MessageComposer.withTypeUrl.send({
     fromAddress,
@@ -16,7 +15,7 @@ export function sendMsg(
         amount: amount.toString(),
       },
     ],
-  });
+  })
 }
 
 export function makeSplitRoutesSwapExactAmountOutMsg({
@@ -27,14 +26,14 @@ export function makeSplitRoutesSwapExactAmountOutMsg({
 }: {
   routes: {
     pools: {
-      id: string;
-      tokenInDenom: string;
-    }[];
-    tokenOutAmount: string;
-  }[];
-  tokenOut: { coinMinimalDenom: string };
-  tokenInMaxAmount: string;
-  userOsmoAddress: string;
+      id: string
+      tokenInDenom: string
+    }[]
+    tokenOutAmount: string
+  }[]
+  tokenOut: { coinMinimalDenom: string }
+  tokenInMaxAmount: string
+  userOsmoAddress: string
 }) {
   return osmosis.poolmanager.v1beta1.MessageComposer.withTypeUrl.splitRouteSwapExactAmountOut(
     {
@@ -48,6 +47,6 @@ export function makeSplitRoutesSwapExactAmountOutMsg({
       })),
       tokenOutDenom: tokenOut.coinMinimalDenom,
       tokenInMaxAmount,
-    }
-  );
+    },
+  )
 }
