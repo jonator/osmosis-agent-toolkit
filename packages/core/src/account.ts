@@ -30,7 +30,7 @@ import { sha256 } from '@noble/hashes/sha256'
 import { bech32, utf8 } from '@scure/base'
 import { HDKey } from '@scure/bip32'
 import { mnemonicToSeedSync } from '@scure/bip39'
-import { chains } from 'chain-registry/mainnet'
+import { chains } from 'chain-registry/mainnet/index.js'
 import { osmosisAminoConverters, osmosisProtoRegistry } from 'osmojs'
 
 export interface CosmosSignData {

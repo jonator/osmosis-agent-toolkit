@@ -1,5 +1,3 @@
-import ky from 'ky'
-
 import { type PriceMap, getPrice } from './prices.js'
 import type {
   SidecarInGivenOutQuoteResponse,
@@ -13,35 +11,29 @@ export class OsmosisSqsQueryClient {
     tokenIn: { amount: string; denom: string },
     tokenOutDenom: string,
   ) {
-    return ky
-      .get(this.url('/router/quote'), {
-        searchParams: {
-          tokenIn: `${tokenIn.amount}${tokenIn.denom}`,
-          tokenOutDenom,
-        },
-      })
-      .json<SidecarOutGivenInQuoteResponse>()
+    const url = this.url('/router/quote')
+    url.searchParams.set('tokenIn', `${tokenIn.amount}${tokenIn.denom}`)
+    url.searchParams.set('tokenOutDenom', tokenOutDenom)
+
+    const response = await fetch(url)
+    return (await response.json()) as SidecarOutGivenInQuoteResponse
   }
 
   async getInGivenOutQuote(tokenOut: { amount: string; denom: string }) {
-    return ky
-      .get(this.url('/router/quote'), {
-        searchParams: {
-          token_out_denom: tokenOut.denom,
-          token_out_amount: tokenOut.amount,
-        },
-      })
-      .json<SidecarInGivenOutQuoteResponse>()
+    const url = this.url('/router/quote')
+    url.searchParams.set('token_out_denom', tokenOut.denom)
+    url.searchParams.set('token_out_amount', tokenOut.amount)
+
+    const response = await fetch(url)
+    return (await response.json()) as SidecarInGivenOutQuoteResponse
   }
 
   async getPrices(denoms: string[]) {
-    const priceMap = await ky
-      .get(this.url('/tokens/prices'), {
-        searchParams: {
-          base: denoms.join(','),
-        },
-      })
-      .json<PriceMap>()
+    const url = this.url('/tokens/prices')
+    url.searchParams.set('base', denoms.join(','))
+
+    const response = await fetch(url)
+    const priceMap = (await response.json()) as PriceMap
 
     return denoms.reduce(
       (acc, denom) => {

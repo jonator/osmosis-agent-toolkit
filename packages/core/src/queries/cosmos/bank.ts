@@ -1,5 +1,4 @@
-import { chains } from 'chain-registry/mainnet'
-import ky from 'ky'
+import { chains } from 'chain-registry/mainnet/index.js'
 
 export type QueryBalancesResponse = {
   balances: {
@@ -15,11 +14,10 @@ export const queryBalances = async (
   const chain = chains.find((chain) => chain.chain_id === chainId)
   if (!chain) throw new Error(`Chain ${chainId} not found`)
 
-  return ky
-    .get(
-      `${
-        chain.apis!.rest![0]!.address
-      }/cosmos/bank/v1beta1/balances/${bech32Address}?pagination.limit=1000`,
-    )
-    .json<QueryBalancesResponse>()
+  const response = await fetch(
+    `${
+      chain.apis!.rest![0]!.address
+    }/cosmos/bank/v1beta1/balances/${bech32Address}?pagination.limit=1000`,
+  )
+  return response.json()
 }
