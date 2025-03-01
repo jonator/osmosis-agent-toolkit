@@ -10,4 +10,5 @@ export interface Tool<TParams = unknown, TOutput = unknown> {
 export interface ToolMemory<Key, Value> {
   get: (key: Key) => Value | undefined
   set: (key: Key, value: Value) => void
+  delete: (key: Key) => void
 }

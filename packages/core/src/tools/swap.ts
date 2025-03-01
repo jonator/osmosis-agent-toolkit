@@ -274,6 +274,9 @@ export class SendSwapInGivenOutQuoteTxTool
       msgs: [msg],
     })
 
+    // Done to avoid old quotes from being re-used.
+    this.memory.delete(params.quoteId)
+
     return {
       txHash,
     }
@@ -349,6 +352,9 @@ export class SendSwapOutGivenInQuoteTxTool
     const txHash = await this.account.signAndBroadcast({
       msgs: [msg],
     })
+
+    // Done to avoid old quotes from being re-used.
+    this.memory.delete(params.quoteId)
 
     return {
       txHash,
