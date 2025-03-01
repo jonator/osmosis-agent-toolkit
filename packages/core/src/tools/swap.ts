@@ -1,7 +1,13 @@
+import type { EncodeObject } from '@cosmjs/proto-signing'
 import { assets } from 'chain-registry'
 import { z } from 'zod'
+import type { Account } from '../account.js'
 import type { OsmosisSqsQueryClient } from '../queries/sqs/client.js'
 import type { SidecarInGivenOutQuoteResponse } from '../queries/sqs/router.js'
+import {
+  makeSplitRoutesSwapExactAmountOutMsg,
+  makeSwapExactAmountOutMsg,
+} from '../tx/msg.js'
 import { mulPrecision } from '../utils/number.js'
 import type { Tool, ToolMemory } from './tool.js'
 
@@ -96,5 +102,81 @@ export class SwapQuoteInGivenOutTool
     }
 
     return result
+  }
+}
+
+const SendSwapInGivenOutTxParams = z.object({
+  quoteId: z.string().describe('The id of the quote to send'),
+  slippageTolerancePercent: z
+    .number()
+    .describe(
+      'The percentage of slippage tolerance for the amount in of the quote. Default is 0.5%',
+    )
+    .optional(),
+})
+
+type SendSwapInGivenOutQuoteTx = {
+  txHash: string
+}
+
+export class SendSwapInGivenOutQuoteTxTool
+  implements
+    Tool<z.infer<typeof SendSwapInGivenOutTxParams>, SendSwapInGivenOutQuoteTx>
+{
+  readonly name = 'sendSwapInGivenOutQuote'
+  readonly description =
+    'Execute a token in given out amount swap quote transaction by ID. Use getSwapQuoteInGivenOut tool to get quotes.'
+  readonly parameters = SendSwapInGivenOutTxParams
+
+  constructor(
+    protected readonly account: Account,
+    readonly memory: ToolMemory<string, SidecarInGivenOutQuoteResponse>,
+  ) {}
+
+  async call(
+    params: z.infer<typeof SendSwapInGivenOutTxParams>,
+  ): Promise<SendSwapInGivenOutQuoteTx> {
+    const quote = this.memory.get(params.quoteId)
+    if (!quote) throw new Error(`Quote not found: ${params.quoteId}`)
+
+    const slippageTolerancePercent = params.slippageTolerancePercent ?? 0.5
+
+    const tokenInMaxAmount = Math.ceil(
+      parseFloat(quote.amount_in) * (1 + slippageTolerancePercent / 100),
+    ).toString()
+
+    let msg: EncodeObject
+    if (quote.route.length === 1) {
+      msg = makeSwapExactAmountOutMsg({
+        userOsmoAddress: this.account.address,
+        pools: quote.route[0]!.pools.map((route) => ({
+          id: route.id.toString(),
+          tokenInDenom: route.token_in_denom,
+        })),
+        tokenOut: quote.amount_out,
+        tokenInMaxAmount,
+      })
+    } else {
+      msg = makeSplitRoutesSwapExactAmountOutMsg({
+        userOsmoAddress: this.account.address,
+        routes: quote.route.map((route) => ({
+          pools: route.pools.map((pool) => ({
+            id: pool.id.toString(),
+            tokenInDenom: pool.token_in_denom,
+          })),
+          tokenOutAmount: route.out_amount,
+        })),
+        tokenOutDenom: quote.amount_out.denom,
+        tokenInMaxAmount,
+      })
+    }
+
+    const txHash = await this.account.signAndBroadcast({
+      msgs: [msg],
+    })
+
+    return {
+      txHash,
+    }
   }
 }

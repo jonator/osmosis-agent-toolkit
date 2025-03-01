@@ -28,6 +28,16 @@ export default class OsmosisAgentServer extends McpServer {
       swapQuoteInGivenOutTool.parameters.shape,
       (params) => swapQuoteInGivenOutTool.call(params).then(createTextOutput),
     )
+
+    const sendSwapInGivenOutQuoteTxTool =
+      this._toolkit.sendSwapInGivenOutQuoteTxTool
+    this.tool(
+      sendSwapInGivenOutQuoteTxTool.name,
+      sendSwapInGivenOutQuoteTxTool.description,
+      sendSwapInGivenOutQuoteTxTool.parameters.shape,
+      (params) =>
+        sendSwapInGivenOutQuoteTxTool.call(params).then(createTextOutput),
+    )
   }
 }
 
