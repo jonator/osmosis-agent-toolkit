@@ -1,4 +1,3 @@
-import type { EncodeObject } from '@cosmjs/proto-signing'
 import { assets } from 'chain-registry'
 import { z } from 'zod'
 import type { Account } from '../account.js'
@@ -8,11 +7,9 @@ import type {
   SidecarOutGivenInQuoteResponse,
 } from '../queries/sqs/router.js'
 import {
-  makeSplitRoutesSwapExactAmountInMsg,
-  makeSplitRoutesSwapExactAmountOutMsg,
-  makeSwapExactAmountInMsg,
-  makeSwapExactAmountOutMsg,
-} from '../tx/msg.js'
+  makeSwapExactAmountInEncodeObject,
+  makeSwapExactAmountOutEncodeObject,
+} from '../tx/swap.js'
 import { mulPrecision } from '../utils/number.js'
 import type { Tool, ToolMemory } from './tool.js'
 
@@ -238,37 +235,11 @@ export class SendSwapInGivenOutQuoteTxTool
     const quote = this.memory.get(params.quoteId)
     if (!quote) throw new Error(`Quote not found: ${params.quoteId}`)
 
-    const slippageTolerancePercent = params.slippageTolerancePercent ?? 0.5
-
-    const tokenInMaxAmount = Math.ceil(
-      parseFloat(quote.amount_in) * (1 + slippageTolerancePercent / 100),
-    ).toString()
-
-    let msg: EncodeObject
-    if (quote.route.length === 1) {
-      msg = makeSwapExactAmountOutMsg({
-        userOsmoAddress: this.account.address,
-        pools: quote.route[0]!.pools.map((route) => ({
-          id: route.id.toString(),
-          tokenInDenom: route.token_in_denom,
-        })),
-        tokenOut: quote.amount_out,
-        tokenInMaxAmount,
-      })
-    } else {
-      msg = makeSplitRoutesSwapExactAmountOutMsg({
-        userOsmoAddress: this.account.address,
-        routes: quote.route.map((route) => ({
-          pools: route.pools.map((pool) => ({
-            id: pool.id.toString(),
-            tokenInDenom: pool.token_in_denom,
-          })),
-          tokenOutAmount: route.out_amount,
-        })),
-        tokenOutDenom: quote.amount_out.denom,
-        tokenInMaxAmount,
-      })
-    }
+    const msg = makeSwapExactAmountOutEncodeObject(
+      this.account.address,
+      quote,
+      params.slippageTolerancePercent ?? 0.5,
+    )
 
     const txHash = await this.account.signAndBroadcast({
       msgs: [msg],
@@ -317,37 +288,11 @@ export class SendSwapOutGivenInQuoteTxTool
     const quote = this.memory.get(params.quoteId)
     if (!quote) throw new Error(`Quote not found: ${params.quoteId}`)
 
-    const slippageTolerancePercent = params.slippageTolerancePercent ?? 0.5
-
-    const tokenOutMinAmount = Math.floor(
-      parseFloat(quote.amount_out) * (1 - slippageTolerancePercent / 100),
-    ).toString()
-
-    let msg: EncodeObject
-    if (quote.route.length === 1) {
-      msg = makeSwapExactAmountInMsg({
-        userOsmoAddress: this.account.address,
-        pools: quote.route[0]!.pools.map((route) => ({
-          id: route.id.toString(),
-          tokenOutDenom: route.token_out_denom,
-        })),
-        tokenIn: quote.amount_in,
-        tokenOutMinAmount,
-      })
-    } else {
-      msg = makeSplitRoutesSwapExactAmountInMsg({
-        userOsmoAddress: this.account.address,
-        routes: quote.route.map((route) => ({
-          pools: route.pools.map((pool) => ({
-            id: pool.id.toString(),
-            tokenOutDenom: pool.token_out_denom,
-          })),
-          tokenInAmount: route.in_amount,
-        })),
-        tokenInDenom: quote.amount_in.denom,
-        tokenOutMinAmount,
-      })
-    }
+    const msg = makeSwapExactAmountInEncodeObject(
+      this.account.address,
+      quote,
+      params.slippageTolerancePercent ?? 0.5,
+    )
 
     const txHash = await this.account.signAndBroadcast({
       msgs: [msg],

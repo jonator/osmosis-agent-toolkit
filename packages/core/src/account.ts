@@ -123,7 +123,7 @@ export class Account {
           gasPrice!,
           memo,
         )),
-      memo,
+      memo ?? 'osmosis-agent-toolkit',
     )
   }
 
