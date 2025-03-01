@@ -4,10 +4,6 @@ import { queryBalances } from '../queries/cosmos/bank.js'
 import type { OsmosisSqsQueryClient } from '../queries/sqs/client.js'
 import type { Tool } from './tool.js'
 
-// Find Osmosis chain assets
-const osmosisAssets =
-  assets.find((chain) => chain.chain_name === 'osmosis')?.assets || []
-
 // Response type for a single balance
 interface Balance {
   amount: string // Amount with proper decimals
@@ -19,6 +15,9 @@ interface Balance {
 export class BalancesTool implements Tool<z.ZodNever, Balance[]> {
   public readonly name = 'getBalances'
   public readonly description = 'Get the accounts balances'
+
+  protected readonly osmosisAssets =
+    assets.find((chain) => chain.chain_name === 'osmosis')?.assets ?? []
 
   constructor(
     private readonly bech32Address: string,
@@ -37,12 +36,12 @@ export class BalancesTool implements Tool<z.ZodNever, Balance[]> {
     return balances
       .map(({ denom, amount }) => {
         // Find asset info from chain registry
-        const assetInfo = osmosisAssets.find((asset) => asset.base === denom)
+        const asset = this.osmosisAssets.find((asset) => asset.base === denom)
 
-        if (!assetInfo) return
+        if (!asset) return
 
         const decimals =
-          assetInfo.denom_units.find((unit) => unit.denom === assetInfo.display)
+          asset.denom_units.find((unit) => unit.denom === asset.display)
             ?.exponent || 6
 
         // Calculate amount with proper decimals
@@ -57,7 +56,7 @@ export class BalancesTool implements Tool<z.ZodNever, Balance[]> {
 
         return {
           amount: amountWithDecimals,
-          ticker: assetInfo.symbol,
+          ticker: asset.symbol,
           valueUsd,
           priceUsd,
         }

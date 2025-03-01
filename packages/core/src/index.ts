@@ -1,5 +1,6 @@
 export * from './account.js'
 export * from './assets.js'
 export * from './queries/index.js'
+export * from './toolkit.js'
 export * from './tx/index.js'
 export * from './tools/index.js'

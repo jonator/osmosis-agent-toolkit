@@ -19,10 +19,13 @@ export class OsmosisSqsQueryClient {
     return (await response.json()) as SidecarOutGivenInQuoteResponse
   }
 
-  async getInGivenOutQuote(tokenOut: { amount: string; denom: string }) {
+  async getInGivenOutQuote(
+    tokenOut: { amount: string; denom: string },
+    tokenInDenom: string,
+  ) {
     const url = this.url('/router/quote')
-    url.searchParams.set('token_out_denom', tokenOut.denom)
-    url.searchParams.set('token_out_amount', tokenOut.amount)
+    url.searchParams.set('tokenOut', `${tokenOut.amount}${tokenOut.denom}`)
+    url.searchParams.set('tokenInDenom', tokenInDenom)
 
     const response = await fetch(url)
     return (await response.json()) as SidecarInGivenOutQuoteResponse
@@ -45,6 +48,10 @@ export class OsmosisSqsQueryClient {
   }
 
   protected url(path: string) {
-    return new URL(path, this.sqsUrl)
+    const url = new URL(path, this.sqsUrl)
+    // We deal with denoms via asset lists
+    // because we need to deal with amounts with decimals regardless.
+    url.searchParams.set('humanDenoms', 'false')
+    return url
   }
 }
