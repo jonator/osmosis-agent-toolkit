@@ -28,7 +28,13 @@ export default class OsmosisAgentServer extends McpServer {
       swapQuoteInGivenOutTool.parameters.shape,
       (params) => swapQuoteInGivenOutTool.call(params).then(createTextOutput),
     )
-
+    const swapQuoteOutGivenInTool = this._toolkit.swapQuoteOutGivenInTool
+    this.tool(
+      swapQuoteOutGivenInTool.name,
+      swapQuoteOutGivenInTool.description,
+      swapQuoteOutGivenInTool.parameters.shape,
+      (params) => swapQuoteOutGivenInTool.call(params).then(createTextOutput),
+    )
     const sendSwapInGivenOutQuoteTxTool =
       this._toolkit.sendSwapInGivenOutQuoteTxTool
     this.tool(
@@ -37,6 +43,15 @@ export default class OsmosisAgentServer extends McpServer {
       sendSwapInGivenOutQuoteTxTool.parameters.shape,
       (params) =>
         sendSwapInGivenOutQuoteTxTool.call(params).then(createTextOutput),
+    )
+    const sendSwapOutGivenInQuoteTxTool =
+      this._toolkit.sendSwapOutGivenInQuoteTxTool
+    this.tool(
+      sendSwapOutGivenInQuoteTxTool.name,
+      sendSwapOutGivenInQuoteTxTool.description,
+      sendSwapOutGivenInQuoteTxTool.parameters.shape,
+      (params) =>
+        sendSwapOutGivenInQuoteTxTool.call(params).then(createTextOutput),
     )
   }
 }
