@@ -221,7 +221,7 @@ export class SendSwapInGivenOutQuoteTxTool
 {
   readonly name = 'sendSwapInGivenOutTx'
   readonly description =
-    'Execute a token in given out amount swap quote transaction by ID. Use getSwapQuoteInGivenOut tool to get quotes.'
+    'Execute a token in given out amount swap quote transaction by ID. Use getSwapQuoteInGivenOut tool to get quotes. Use the returned txHash generate a mintscan block explorer link.'
   readonly parameters = SendSwapInGivenOutTxParams
 
   constructor(
@@ -274,7 +274,7 @@ export class SendSwapOutGivenInQuoteTxTool
 {
   readonly name = 'sendSwapOutGivenInTx'
   readonly description =
-    'Execute a token out given in amount swap quote transaction by ID. Use getSwapQuoteOutGivenIn tool to get quotes.'
+    'Execute a token out given in amount swap quote transaction by ID. Use getSwapQuoteOutGivenIn tool to get quotes. Use the returned txHash generate a mintscan block explorer link.'
   readonly parameters = SendSwapOutGivenInTxParams
 
   constructor(

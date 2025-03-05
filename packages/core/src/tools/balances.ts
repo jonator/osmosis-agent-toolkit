@@ -4,15 +4,20 @@ import { queryBalances } from '../queries/cosmos/bank.js'
 import type { OsmosisSqsQueryClient } from '../queries/sqs/client.js'
 import type { Tool } from './tool.js'
 
+type Balances = {
+  valueUsd: number
+  balances: Balance[]
+}
+
 // Response type for a single balance
-interface Balance {
+type Balance = {
   amount: string // Amount with proper decimals
   ticker: string // Asset ticker (e.g. OSMO, ATOM)
   valueUsd: number // Total value in USD
   priceUsd: number // Price per unit in USD
 }
 
-export class BalancesTool implements Tool<z.ZodNever, Balance[]> {
+export class BalancesTool implements Tool<z.ZodNever, Balances> {
   public readonly name = 'getBalances'
   public readonly description = 'Get the accounts balances'
 
@@ -24,16 +29,16 @@ export class BalancesTool implements Tool<z.ZodNever, Balance[]> {
     private readonly sqsClient: OsmosisSqsQueryClient,
   ) {}
 
-  async call(): Promise<Balance[]> {
+  async call(): Promise<Balances> {
     // Get raw balances using the account client
-    const balances = (await queryBalances(this.bech32Address))?.balances
-    const denoms = balances.map((balance) => balance.denom)
+    const rawBalances = (await queryBalances(this.bech32Address))?.balances
+    const denoms = rawBalances.map((balance) => balance.denom)
 
     // Fetch prices for all denoms
     const priceMap = await this.sqsClient.getPrices(denoms)
 
     // Transform balances with prices and asset info
-    return balances
+    const balances = rawBalances
       .map(({ denom, amount }) => {
         // Find asset info from chain registry
         const asset = this.osmosisAssets.find((asset) => asset.base === denom)
@@ -62,5 +67,10 @@ export class BalancesTool implements Tool<z.ZodNever, Balance[]> {
         }
       })
       .filter(Boolean) as Balance[]
+
+    return {
+      valueUsd: balances.reduce((acc, balance) => acc + balance.valueUsd, 0),
+      balances,
+    }
   }
 }
