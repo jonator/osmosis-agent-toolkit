@@ -21,6 +21,14 @@ export default class OsmosisAgentServer extends McpServer {
       accountTool.call().then(createTextOutput),
     )
 
+    const assetsTool = this._toolkit.assetsTool
+    this.tool(
+      assetsTool.name,
+      assetsTool.description,
+      assetsTool.parameters.shape,
+      (params) => assetsTool.call(params).then(createTextOutput),
+    )
+
     const swapQuoteInGivenOutTool = this._toolkit.swapQuoteInGivenOutTool
     this.tool(
       swapQuoteInGivenOutTool.name,

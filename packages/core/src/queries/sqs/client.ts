@@ -1,3 +1,4 @@
+import DataLoader from 'dataloader'
 import { type PriceMap, getPrice } from './prices.js'
 import type {
   SidecarInGivenOutQuoteResponse,
@@ -5,6 +6,38 @@ import type {
 } from './router.js'
 
 export class OsmosisSqsQueryClient {
+  protected pricesDataLoader = new DataLoader(
+    (denoms: readonly string[]) => {
+      const url = this.url('/tokens/prices')
+      url.searchParams.set('base', denoms.join(','))
+
+      return fetch(url)
+        .then((response) => response.json())
+        .then((priceMap: PriceMap) => {
+          return denoms.map((denom) => {
+            try {
+              const price = getPrice(priceMap, denom)
+
+              if (!price) {
+                return new Error(`No SQS price result for ${denom}`)
+              }
+
+              if (price === '0') {
+                return new Error(`Zero price result for ${denom}`)
+              }
+
+              return price
+            } catch (e) {
+              return new Error(`Error getting price for ${denom}: ${e}`)
+            }
+          })
+        })
+    },
+    {
+      maxBatchSize: 100, // Limit batch size to avoid hitting URL length limits
+    },
+  )
+
   constructor(private readonly sqsUrl = 'https://sqsprod.osmosis.zone') {}
 
   async getOutGivenInQuote(
@@ -31,20 +64,9 @@ export class OsmosisSqsQueryClient {
     return (await response.json()) as SidecarInGivenOutQuoteResponse
   }
 
-  async getPrices(denoms: string[]) {
-    const url = this.url('/tokens/prices')
-    url.searchParams.set('base', denoms.join(','))
-
-    const response = await fetch(url)
-    const priceMap = (await response.json()) as PriceMap
-
-    return denoms.reduce(
-      (acc, denom) => {
-        acc[denom] = getPrice(priceMap, denom) ?? '0'
-        return acc
-      },
-      {} as Record<string, string>,
-    )
+  /** Prices are fetched in batches. */
+  getPrice(denom: string) {
+    return this.pricesDataLoader.load(denom).then(Number)
   }
 
   protected url(path: string) {

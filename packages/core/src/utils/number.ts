@@ -56,3 +56,33 @@ export function limitDecimals(num: number, maxDecimals = 6): string {
     useGrouping: false,
   }).format(num)
 }
+
+// describe('limitDecimals', () => {
+//   test('should limit decimal places correctly without rounding', () => {
+//     expect(limitDecimals(123.456, 2)).toBe('123.45')
+//     expect(limitDecimals(0.1234, 3)).toBe('0.123')
+//     expect(limitDecimals(100, 2)).toBe('100')
+//     expect(limitDecimals(2317.567632731662, 6)).toBe('2317.567632')
+//   })
+
+//   test('should handle zero decimal places', () => {
+//     expect(limitDecimals(123.456, 0)).toBe('123')
+//     expect(limitDecimals(0.789, 0)).toBe('0')
+//   })
+
+//   test('should remove trailing zeros', () => {
+//     expect(limitDecimals(123.4, 4)).toBe('123.4')
+//     expect(limitDecimals(100.0, 4)).toBe('100')
+//   })
+
+//   test('should handle very small numbers', () => {
+//     expect(limitDecimals(0.000123456, 6)).toBe('0.000123')
+//     expect(limitDecimals(0.000123456, 9)).toBe('0.000123456')
+//     expect(limitDecimals(0.8240679241742164, 6)).toBe('0.824067')
+//   })
+
+//   test('should handle very large numbers', () => {
+//     expect(limitDecimals(123456789.123456, 2)).toBe('123456789.12')
+//     expect(limitDecimals(999999999.999999, 4)).toBe('999999999.9999')
+//   })
+// })
