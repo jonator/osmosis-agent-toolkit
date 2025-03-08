@@ -5,7 +5,7 @@ import type {
   SidecarInGivenOutQuoteResponse,
   SidecarOutGivenInQuoteResponse,
 } from './queries/sqs/router.js'
-import { BalancesTool } from './tools/balances.js'
+import { AccountTool } from './tools/account.js'
 import {
   SendSwapInGivenOutQuoteTxTool,
   SendSwapOutGivenInQuoteTxTool,
@@ -16,7 +16,7 @@ import {
 export class OsmosisAgentToolkit {
   protected readonly _account: Account
   protected readonly _sqsClient = new OsmosisSqsQueryClient()
-  protected readonly _balancesTool: BalancesTool
+  protected readonly _accountTool: AccountTool
   protected readonly _swapQuoteInGivenOutTool: SwapQuoteInGivenOutTool
   protected readonly _swapQuoteOutGivenInTool: SwapQuoteOutGivenInTool
   protected readonly _sendSwapInGivenOutQuoteTxTool: SendSwapInGivenOutQuoteTxTool
@@ -35,10 +35,7 @@ export class OsmosisAgentToolkit {
   constructor(mnemonic: string) {
     this._account = new Account(mnemonic)
 
-    this._balancesTool = new BalancesTool(
-      this._account.address,
-      this._sqsClient,
-    )
+    this._accountTool = new AccountTool(this._account, this._sqsClient)
 
     this._swapQuoteInGivenOutTool = new SwapQuoteInGivenOutTool(
       this._sqsClient,
@@ -66,8 +63,8 @@ export class OsmosisAgentToolkit {
     return this._sqsClient
   }
 
-  get balancesTool() {
-    return this._balancesTool
+  get accountTool() {
+    return this._accountTool
   }
 
   get swapQuoteInGivenOutTool() {

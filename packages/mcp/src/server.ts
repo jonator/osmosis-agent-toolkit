@@ -16,9 +16,9 @@ export default class OsmosisAgentServer extends McpServer {
 
     this._toolkit = new OsmosisAgentToolkit(mnemonic)
 
-    const balancesTool = this._toolkit.balancesTool
-    this.tool(balancesTool.name, balancesTool.description, () =>
-      balancesTool.call().then(createTextOutput),
+    const accountTool = this._toolkit.accountTool
+    this.tool(accountTool.name, accountTool.description, () =>
+      accountTool.call().then(createTextOutput),
     )
 
     const swapQuoteInGivenOutTool = this._toolkit.swapQuoteInGivenOutTool

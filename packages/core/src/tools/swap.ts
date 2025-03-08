@@ -42,7 +42,7 @@ export class SwapQuoteInGivenOutTool
 {
   readonly name = 'getSwapQuoteInGivenOut'
   readonly description =
-    'Get a swap quote for a desired amount out with decimals identified with tickers like BTC, ETH, OSMO, etc.'
+    'Get a swap quote for a desired amount out with decimals identified with tickers like BTC, ETH, OSMO, etc. Dont show the ID to the user.'
   readonly parameters = SwapQuoteInGivenOutParams
 
   protected readonly osmosisAssets =
@@ -136,7 +136,7 @@ export class SwapQuoteOutGivenInTool
 {
   readonly name = 'getSwapQuoteOutGivenIn'
   readonly description =
-    'Get a swap quote for a specified amount in with decimals identified with tickers like BTC, ETH, OSMO, etc.'
+    'Get a swap quote for a specified amount in with decimals identified with tickers like BTC, ETH, OSMO, etc. Dont show the ID to the user.'
   readonly parameters = SwapQuoteOutGivenInParams
 
   protected readonly osmosisAssets =
