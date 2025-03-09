@@ -16,6 +16,27 @@ This is where registry data, query clients, and sign and broadcast logic is defi
 
 Model Context Protocol (MCP) implementation of the Osmosis Agent Toolkit.
 
+#### Usage with Claude Desktop or Cursor
+
+Add the following to your `claude_desktop_config.json` or `.cursor/mcp.json`. See [here](https://modelcontextprotocol.io/quickstart/user) for more details.
+
+```json
+{
+    "mcpServers": {
+        "Osmosis": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@osmosis-agent-toolkit/mcp"
+            ],
+            "env": {
+                "OSMOSIS_MNEMONIC": "<your mnemonic here>"
+            }
+        }
+    }
+}
+```
+
 ## Development
 
 Install dependencies using yarn or bun:

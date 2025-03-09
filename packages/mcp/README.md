@@ -15,7 +15,7 @@ npx -y @osmosis-agent-toolkit/mcp
 
 ## Usage with Claude Desktop or Cursor
 
-Add the following to your `claude_desktop_config.json` or `.cursor/settings.json`. See [here](https://modelcontextprotocol.io/quickstart/user) for more details.
+Add the following to your `claude_desktop_config.json` or `.cursor/mcp.json`. See [here](https://modelcontextprotocol.io/quickstart/user) for more details.
 
 ```json
 {
