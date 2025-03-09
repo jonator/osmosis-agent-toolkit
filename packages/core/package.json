@@ -1,6 +1,6 @@
 {
   "name": "@osmosis-agent-toolkit/core",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "author": "Jon Ator <jonathanator0@gmail.com> (https://github.com/jonator)",
   "license": "MIT",
   "homepage": "https://github.com/jonator/osmosis-agent-toolkit/tree/main/packages/core#README",
@@ -22,7 +22,8 @@
     "lint": "biome check",
     "lint:fix": "biome check --write",
     "knip": "knip",
-    "knip:fix": "knip --fix"
+    "knip:fix": "knip --fix",
+    "prepare": "bun run build"
   },
   "exports": {
     "types": "./dist/index.d.ts",
