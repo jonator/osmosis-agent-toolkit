@@ -1,12 +1,15 @@
 {
   "name": "@osmosis-agent-toolkit/mcp",
   "version": "1.0.0",
+  "author": "Jon Ator <jonathanator0@gmail.com> (https://github.com/jonator)",
+  "license": "MIT",
   "bin": "dist/index.js",
   "type": "module",
   "packageManager": "bun@1.2.0",
   "engines": {
     "node": ">=20"
   },
+  "keywords": ["mcp", "modelcontextprotocol", "osmosis"],
   "scripts": {
     "build": "tsc",
     "dev": "tsc -w",
@@ -19,8 +22,5 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.5.0",
     "@osmosis-agent-toolkit/core": "1.0.0"
-  },
-  "devDependencies": {
-    "@types/node": "^22.13.5"
   }
 }

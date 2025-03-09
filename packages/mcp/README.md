@@ -8,23 +8,27 @@ This enables MCP clients to interact with a given Osmosis account.
 To run the Osmosis MCP server using npx, use the following command:
 
 ```bash
-npx -y @osmosis-agent-toolkit/mcp --mnemonic=MNEMONIC
+npx -y @osmosis-agent-toolkit/mcp --mnemonic='$MNEMONIC'
+# Start with OSMOSIS_MNEMONIC environment variable
+npx -y @osmosis-agent-toolkit/mcp
 ```
 
-## Usage with Claude Desktop
+## Usage with Claude Desktop or Cursor
 
-Add the following to your `claude_desktop_config.json`. See [here](https://modelcontextprotocol.io/quickstart/user) for more details.
+Add the following to your `claude_desktop_config.json` or `.cursor/settings.json`. See [here](https://modelcontextprotocol.io/quickstart/user) for more details.
 
 ```json
 {
     “mcpServers”: {
-        “stripe”: {
+        "Osmosis": {
             “command”: “npx”,
             “args”: [
                 “-y”,
-                “@osmosis-agent-toolkit/mcp”,
-                “--mnemonic=MNEMONIC”
+                “@osmosis-agent-toolkit/mcp”
             ]
+            "env": {
+                "OSMOSIS_MNEMONIC": "<your mmnemonic here>"
+            }
         }
     }
 }
@@ -44,9 +48,9 @@ Run the following command in your terminal:
 
 ```bash
 # Start MCP Inspector and server
-npx @modelcontextprotocol/inspector bun dist/index.js --mnemonic=MNEMONIC
+npx @modelcontextprotocol/inspector bun dist/index.js --mnemonic='$MNEMONIC'
 # Start MCP Inspector and server with OSMOSIS_MNEMONIC environment variable
-npx @modelcontextprotocol/inspector bun dist/index.js 
+npx @modelcontextprotocol/inspector bun dist/index.js
 
 ```
 

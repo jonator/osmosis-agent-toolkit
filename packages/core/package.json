@@ -2,6 +2,8 @@
   "name": "@osmosis-agent-toolkit/core",
   "version": "1.0.0",
   "type": "module",
+  "author": "Jon Ator <jonathanator0@gmail.com> (https://github.com/jonator)",
+  "license": "MIT",
   "scripts": {
     "build": "tsc; tsc -p tsconfig.cjs.json",
     "dev": "tsc -w",

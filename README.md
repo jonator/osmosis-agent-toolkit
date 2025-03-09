@@ -11,3 +11,24 @@ Large Language Models (LLMs) can use these tools to interact with the Osmosis pr
 
 The core package contains the core functionality that is used by the other packages.
 This is where registry data, query clients, and sign and broadcast logic is defined.
+
+### `@osmosis-agent-toolkit/mcp`
+
+Model Context Protocol (MCP) implementation of the Osmosis Agent Toolkit.
+
+## Development
+
+Install dependencies using yarn or bun:
+```bash
+bun i
+```
+
+Start watch mode for local development:
+```bash
+bun run dev
+```
+
+To build:
+```bash
+bun run build
+```

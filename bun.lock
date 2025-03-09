@@ -43,9 +43,6 @@
         "@modelcontextprotocol/sdk": "^1.5.0",
         "@osmosis-agent-toolkit/core": "1.0.0",
       },
-      "devDependencies": {
-        "@types/node": "^22.13.5",
-      },
     },
   },
   "packages": {
