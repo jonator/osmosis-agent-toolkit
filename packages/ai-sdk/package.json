@@ -16,9 +16,6 @@
   },
   "packageManager": "bun@1.2.3",
   "type": "module",
-  "engines": {
-    "node": ">=20"
-  },
   "scripts": {
     "build": "tsc; tsc -p tsconfig.cjs.json",
     "dev": "tsc -w",

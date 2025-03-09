@@ -12,9 +12,13 @@ Large Language Models (LLMs) can use these tools to interact with the Osmosis pr
 The core package contains the core functionality that is used by the other packages.
 This is where registry data, query clients, and sign and broadcast logic is defined.
 
+### `@osmosis-agent-toolkit/ai-sdk`
+
+An implementation of Vercel's [AI SDK](https://sdk.vercel.ai/) for the Osmosis Agent Toolkit.
+
 ### `@osmosis-agent-toolkit/mcp`
 
-Model Context Protocol (MCP) implementation of the Osmosis Agent Toolkit.
+Model Context Protocol (MCP) server implementation of the Osmosis Agent Toolkit.
 
 #### Usage with Claude Desktop or Cursor
 
