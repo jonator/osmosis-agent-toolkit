@@ -15,6 +15,7 @@
     "access": "public"
   },
   "bin": "dist/index.js",
+  "packageManager": "bun@1.2.3",
   "type": "module",
   "engines": {
     "node": ">=20"

@@ -2,9 +2,12 @@
   "name": "osmosis-agent-toolkit",
   "version": "1.0.0",
   "private": true,
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "author": "Jon Ator <jonathanator0@gmail.com> (https://github.com/jonator)",
   "license": "MIT",
+  "packageManager": "bun@1.2.3",
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
