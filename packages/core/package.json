@@ -50,5 +50,6 @@
   },
   "devDependencies": {
     "@chain-registry/types": "^0.50.32"
-  }
+  },
+  "gitHead": "8bff7ffd9936f5aece7e0da13a1b0a5e153f871e"
 }
