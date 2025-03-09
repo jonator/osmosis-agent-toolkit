@@ -19,15 +19,15 @@ Add the following to your `claude_desktop_config.json` or `.cursor/settings.json
 
 ```json
 {
-    “mcpServers”: {
+    "mcpServers": {
         "Osmosis": {
-            “command”: “npx”,
-            “args”: [
-                “-y”,
-                “@osmosis-agent-toolkit/mcp”
-            ]
+            "command": "npx",
+            "args": [
+                "-y",
+                "@osmosis-agent-toolkit/mcp"
+            ],
             "env": {
-                "OSMOSIS_MNEMONIC": "<your mmnemonic here>"
+                "OSMOSIS_MNEMONIC": "<your mnemonic here>"
             }
         }
     }

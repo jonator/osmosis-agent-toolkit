@@ -1,9 +1,20 @@
 {
   "name": "@osmosis-agent-toolkit/core",
   "version": "1.0.0",
-  "type": "module",
   "author": "Jon Ator <jonathanator0@gmail.com> (https://github.com/jonator)",
   "license": "MIT",
+  "homepage": "https://github.com/jonator/osmosis-agent-toolkit/tree/main/packages/core#README",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jonator/osmosis-agent-toolkit"
+  },
+  "bugs": {
+    "url": "https://github.com/jonator/osmosis-agent-toolkit/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
   "scripts": {
     "build": "tsc; tsc -p tsconfig.cjs.json",
     "dev": "tsc -w",

@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "workspaces": ["packages/*"],
-  "packageManager": "bun@1.2.0",
   "author": "Jon Ator <jonathanator0@gmail.com> (https://github.com/jonator)",
   "license": "MIT",
   "scripts": {
