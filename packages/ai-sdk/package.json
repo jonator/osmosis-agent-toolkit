@@ -24,7 +24,7 @@
     "lint:fix": "biome check --write",
     "knip": "knip",
     "knip:fix": "knip --fix",
-    "prepare": "bun run build"
+    "prepublishOnly": "bun run build"
   },
   "exports": {
     "types": "./dist/index.d.ts",

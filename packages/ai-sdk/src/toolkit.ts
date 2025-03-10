@@ -2,21 +2,21 @@ import {
   OsmosisAgentToolkit as CoreOsmosisAgentToolkit,
   type Tool as CoreTool,
 } from '@osmosis-agent-toolkit/core'
-import { tool, type Tool } from 'ai'
+import { type Tool, tool } from 'ai'
 import { z } from 'zod'
 
 /** Re-exports core Osmosis toolkit wrapped with ai-sdk tools. */
 export class OsmosisAgentToolkit extends CoreOsmosisAgentToolkit {
   get tools() {
     return {
-      accountTool: makeAiSdkTool(this.accountTool),
-      swapQuoteInGivenOutTool: makeAiSdkTool(this.swapQuoteInGivenOutTool),
+      accountTool: makeAiSdkTool(super.accountTool),
+      swapQuoteInGivenOutTool: makeAiSdkTool(super.swapQuoteInGivenOutTool),
       sendSwapInGivenOutQuoteTxTool: makeAiSdkTool(
-        this.sendSwapInGivenOutQuoteTxTool,
+        super.sendSwapInGivenOutQuoteTxTool,
       ),
-      swapQuoteOutGivenInTool: makeAiSdkTool(this.swapQuoteOutGivenInTool),
+      swapQuoteOutGivenInTool: makeAiSdkTool(super.swapQuoteOutGivenInTool),
       sendSwapOutGivenInQuoteTxTool: makeAiSdkTool(
-        this.sendSwapOutGivenInQuoteTxTool,
+        super.sendSwapOutGivenInQuoteTxTool,
       ),
     }
   }
