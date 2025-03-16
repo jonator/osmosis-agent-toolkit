@@ -17,7 +17,7 @@
   "packageManager": "bun@1.2.3",
   "type": "module",
   "scripts": {
-    "build": "tsc; tsc -p tsconfig.cjs.json",
+    "build": "tsc",
     "dev": "tsc -w",
     "clean": "rm -rf dist; rm tsconfig.tsbuildinfo",
     "lint": "biome check",
