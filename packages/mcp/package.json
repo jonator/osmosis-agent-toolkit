@@ -31,7 +31,7 @@
     "prepublishOnly": "bun run build"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.5.0",
+    "@modelcontextprotocol/sdk": "^1.7.0",
     "@osmosis-agent-toolkit/core": "^1.0.0"
   },
   "gitHead": "8bff7ffd9936f5aece7e0da13a1b0a5e153f871e"

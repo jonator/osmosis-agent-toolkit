@@ -1,5 +1,7 @@
 # Osmosis Model Context Protocol
 
+[![smithery badge](https://smithery.ai/badge/@jonator/osmosis-agent-toolkit)](https://smithery.ai/server/@jonator/osmosis-agent-toolkit)
+
 Provides an Osmosis implementation of the [Model Context Protocol](https://modelcontextprotocol.io/) server given an account mnemonic.
 This enables MCP clients to interact with a given Osmosis account.
 
