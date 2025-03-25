@@ -1,0 +1,20 @@
+# Smithery.ai configuration
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties:
+      mnemonic:
+        type: string
+        description: Osmosis account mnemonic for MCP operations
+    required: ["mnemonic"]
+  commandFunction: |-
+    (config) => ({
+      "command": "bun",
+      "args": [
+        "dist/index.js",
+      ],
+      "env": {
+        "OSMOSIS_MNEMONIC": config.mnemonic
+      }
+    })
